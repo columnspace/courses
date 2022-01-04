@@ -25,7 +25,27 @@ def load_cows(filename):
     a dictionary of cow name (string), weight (int) pairs
     """
     # TODO: Your code here
-    pass
+    result = {}
+    with open(filename) as file:
+        for line in file:
+            name, weight = line.split(',')
+            result[name] = int(weight)
+    return result
+
+def test_load_cows():
+    actual = load_cows('ps1_cow_data.txt')
+    expected = {'Maggie':3,
+                'Herman':7,
+                'Betsy':9,
+                'Oreo':6,
+                'Moo Moo':3,
+                'Milkshake':2,
+                'Millie':5,
+                'Lola':2,
+                'Florence':2,
+                'Henrietta':9}
+    assert actual == expected, 'test load_cows FAILED!'
+
 
 # Problem 2
 def greedy_cow_transport(cows,limit=10):
@@ -51,7 +71,24 @@ def greedy_cow_transport(cows,limit=10):
     trips
     """
     # TODO: Your code here
-    pass
+    sorted_cows = sorted(cows.items(), key = lambda x: x[1], reverse = True)
+    result = []
+    i = 0
+    for name, weight in sorted_cows:
+        for trip in result:
+            if sum([i[1] for i in trip]) + weight <= limit:
+                trip.append((name, weight))
+                break
+        else:
+            if weight <= limit:
+                result.append([(name, weight)])
+    return [[cow[0] for cow in trip] for trip in result]
+
+def test_greedy_cow_transport():
+    cows = {'Jesse':6, 'Maybel': 3, 'Callie': 2, 'Maggie': 5}
+    actual = greedy_cow_transport(cows, 10)
+    expected = [['Jesse', 'Maybel'], ['Maggie', 'Callie']]
+    assert actual==expected, 'test_greedy_cow_transport FAILED!'
 
 # Problem 3
 def brute_force_cow_transport(cows,limit=10):
@@ -76,8 +113,24 @@ def brute_force_cow_transport(cows,limit=10):
     trips
     """
     # TODO: Your code here
-    pass
-        
+    min_trips = len(cows)
+    result = None
+    for partition in get_partitions(cows.items()):
+        for trip in partition:
+            if sum([cow[1] for cow in trip]) > limit:
+                break
+        else:
+            if len(partition) < min_trips:
+                min_trips = len(partition)
+                result = [[cow[0] for cow in trip] for trip in partition]
+    return result
+
+
+def test_brute_force_cow_transport():
+    cows = {'Jesse':6, 'Maybel': 3, 'Callie': 2, 'Maggie': 5}
+    actual = brute_force_cow_transport(cows, 10)
+    assert len(actual)==2 and all([sum([cows[i] for i in trip]) <= 10 for trip in actual]), 'test_brute_force_cow_transport FAILED!'
+
 # Problem 4
 def compare_cow_transport_algorithms():
     """
@@ -93,4 +146,21 @@ def compare_cow_transport_algorithms():
     Does not return anything.
     """
     # TODO: Your code here
-    pass
+    cows = load_cows('ps1_cow_data.txt')
+    print(cows)
+    start = time.time()
+    result_greedy = greedy_cow_transport(cows)
+    print(result_greedy)
+    end = time.time()
+    print ('Greedy method: %.2f seconds '%(end - start))
+    start = time.time()
+    result_bruteforce = brute_force_cow_transport(cows)
+    print(result_bruteforce)
+    end = time.time()
+    print ('Brute force method: %.2f seconds '%(end - start))
+
+if __name__ == '__main__':
+    test_load_cows()
+    test_greedy_cow_transport()
+    test_brute_force_cow_transport()
+    compare_cow_transport_algorithms()
