@@ -20,7 +20,9 @@ from graph import Digraph, Node, WeightedEdge
 # represented?
 #
 # Answer:
-#
+# Nodes: building
+# Edges: route
+# Distance: total/outdoor distance in meters
 
 
 # Problem 2b: Implementing load_map
@@ -45,9 +47,29 @@ def load_map(map_filename):
 
     # TODO
     print("Loading map from file...")
+    g = Digraph()
+    with open(map_filename) as f:
+        lines = f.readlines()
+        for line in lines:
+            src, dest, total, outdoor = line.split(' ')
+            src = Node(src)
+            dest = Node(dest)
+            edge = WeightedEdge(src, dest, int(total), int(outdoor))
+            if not g.has_node(src):
+                g.add_node(src)
+            if not g.has_node(dest):
+                g.add_node(dest)
+            g.add_edge(edge)
+    return g
 
 # Problem 2c: Testing load_map
 # Include the lines used to test load_map below, but comment them out
+
+def test_load_map():
+    g = load_map('test_load_map.txt')
+    print (g)
+
+# test_load_map()
 
 
 #
@@ -58,7 +80,8 @@ def load_map(map_filename):
 # What is the objective function for this problem? What are the constraints?
 #
 # Answer:
-#
+# minimize sum (total distance)
+# s.t. sum(outdoor distance) <= threshold
 
 # Problem 3b: Implement get_best_path
 def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,
@@ -95,8 +118,43 @@ def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist,
         If there exists no path that satisfies max_total_dist and
         max_dist_outdoors constraints, then return None.
     """
-    # TODO
-    pass
+    if not (digraph.has_node(Node(start)) and digraph.has_node(Node(end))):
+        raise ValueError('Start and end must be nodes in the graph')
+    elif start == end:
+        # todo: we find a path; update and return
+#         print ('find a path: ', end = '')
+#         print (path)
+        return path[0], path[1]
+    else:
+        for edge in digraph.get_edges_for_node(Node(start)):
+            node = edge.get_destination()
+            total_dist = edge.get_total_distance()
+            outdoor_dist = edge.get_outdoor_distance()
+#             print ('trying edge: ', end = '')
+#             print(edge, end = '.')
+            if str(node) in path[0]:
+#                 print ('node already in path')
+                continue
+            # if exceed the outdoor distance threshold, do not need to go further
+            if max_dist_outdoors is not None and path[2] + outdoor_dist > max_dist_outdoors:
+#                 print ('exceed outdoor threshold')
+                continue
+            # if the current path cannot be better than best found so far, do not need to go further
+            elif best_dist is not None and path[1] + total_dist > best_dist:
+#                 print ('exceed current best dist = %f'%best_dist)
+                continue
+            # else: current (part) path is under outdoor distance threshold; shorter than best solution so far
+            else:
+#                 print ('continue recursion')
+                new_path = [path[0] + [str(node)], path[1] + total_dist, path[2] + outdoor_dist]
+                recursive_result = get_best_path(digraph, str(node), end, new_path, max_dist_outdoors, best_dist, best_path)
+                if recursive_result is not None:
+                    best_path = recursive_result[0]
+                    best_dist = recursive_result[1]
+        if best_path is None:
+            return None
+        else:
+            return best_path, best_dist
 
 
 # Problem 3c: Implement directed_dfs
@@ -129,7 +187,12 @@ def directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors):
         max_dist_outdoors constraints, then raises a ValueError.
     """
     # TODO
-    pass
+    result = get_best_path(digraph, start, end, [[start], 0, 0], max_dist_outdoors, max_total_dist,
+                      None)
+    if result is not None:
+        return result[0]
+    else:
+        raise ValueError('No path exists!')
 
 
 # ================================================================

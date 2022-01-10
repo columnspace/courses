@@ -127,8 +127,9 @@ def testSP(source, destination):
     else:
         print('There is no path from', source, 'to', destination)
 
-testSP('Chicago', 'Boston')
-print()
+if __name__=='__main__':
+    testSP('Chicago', 'Boston')
+    print()
 #testSP('Boston', 'Phoenix')
 #print()
 
@@ -162,6 +163,7 @@ def shortestPath(graph, start, end, toPrint = False):
     """Assumes graph is a Digraph; start and end are nodes
        Returns a shortest path from start to end in graph"""
     return BFS(graph, start, end, toPrint)
-    
-#testSP('Boston', 'Phoenix')
+
+if __name__=='__main__':
+    testSP('Boston', 'Phoenix')
     
