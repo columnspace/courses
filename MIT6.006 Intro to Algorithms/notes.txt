@@ -1,0 +1,22 @@
+Lecture 5 Linear Sort
+1. In a comparison model, the lower bound for sorting is O(n*log(n)). The argument is similar to search: sort is to search for a particular permutation, thus O(log(n!))=O(n*log(n))
+
+2. Direct access array sort: suppose all keys are unique non-negative integers in range{0,...,u-1}. Then we insert each item into a direct access array of size u. Return the items in the order in the array.
+Code in lecture 5 notes.
+Running time: Theta(u)
+Not inplace. Extra space Theta(u)
+Good thing: when u=Theta(n), running time is Theta(n)
+Bad thing: most of the time u != Theta(n), in which case takes lots of time and extra space. Solution: radix sort
+        Requires unique key. Solution: could store a chain at each index. -> counting sort
+        Only for integer keys.
+
+3. Tuple sort: if u is larger than Theta(n) but u < n^2, we can represent each key with a tuple (a,b) such that x = a*n + b.
+Then instead of maintaining a array of length u, we can maintain two arrays of length n, each for one element of the tuple.
+Then to sort the original keys, we can apply counting sort to each of the two arrays, from least significant to most significant.
+Given the sort is in-place, after two sorts the original keys are sorted. (Similar to sort a table by multiple columns)
+
+4. Radix sort: when u is large, we can find some constant c that u < n^c. Then we can represent each key in {0,...,u-1} with a tuple of c elements.
+Using counting sort, we sort each element in the tuple, from least significant to most significant.
+Need to ensure the sort for each element is stable.
+The total time is O(n+n*log_n(u)) = O(cn). When c is constant, it is O(n) sorting.
+

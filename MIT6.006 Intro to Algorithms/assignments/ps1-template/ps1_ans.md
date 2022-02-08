@@ -33,17 +33,6 @@
     (b) move one item is equivalent to delete and insert, which takes log(n) timme. This is equivalently moving k items, thus k*log(n) time.
 
 ### Problem 1-3
-    class Binder:
-        def __init__(self, pages):
-            // pages is array, this build in O(n) time
-            self.pages = pages
-            self.bookmarks = {'A': 0, 'B': 0}
-        def place_mark(self,i,m):
-            self.bookmarks[m] = i
-        def read_page(self, i):
-            return self.pages[i]
-        def shift_mark(self, m,d):
-            self.bookmarks[m]+=d
-        def move_page(self, m):
-            
-        
+    see solution.
+    Notice that we are allowed O(n) time for place_mark, but only O(1) for move_page.
+    It means we should maintain the data strucuture when place_mark, not move_page.
