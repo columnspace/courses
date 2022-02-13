@@ -10,10 +10,14 @@
     (c) a = 2, b = 2, c = 1. f(n) = nlog(n)>n^c, so T(n) = Theta(n*log(n))
     (d) T(n) = n + (n-2) + (n-4) + ... = Theta(n^2)
  
- ### Problem 2-3
+### Problem 2-3
     First determine whether in north half or south half, by checking midpoing (n/2)
     Then check 1, 2, 4, ..., until find k within adjacent powers of 2.
     Then use binary search.
     
 ### Problem 2-4
-    
+    See solution.
+    An item can be included in multiple linked lists, to maintain different orders.
+
+### Problem 2-5
+    See code.

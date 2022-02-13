@@ -36,3 +36,6 @@
     see solution.
     Notice that we are allowed O(n) time for place_mark, but only O(1) for move_page.
     It means we should maintain the data strucuture when place_mark, not move_page.
+
+### Problem 1-4 
+    Coding problem. See codes.
