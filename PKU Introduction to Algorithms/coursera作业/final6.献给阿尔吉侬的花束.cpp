@@ -1,3 +1,6 @@
+/*
+http://noi.openjudge.cn/ch0205/7218/
+*/
 #include<iostream>
 #include<cstring>
 #include<vector>

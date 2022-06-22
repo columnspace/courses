@@ -1,3 +1,6 @@
+/*
+http://noi.openjudge.cn/ch0201/7217/
+*/
 #include<iostream>
 using namespace std;
 // closed form solution : f(N) = N ^ N - (N - 1) for N > 2
